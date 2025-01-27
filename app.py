@@ -1,3 +1,4 @@
+st.write("Secrets loaded: ", st.secrets)
 import streamlit as st
 import openai
 import pinecone
