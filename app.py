@@ -1,7 +1,8 @@
-st.write("Secrets loaded: ", st.secrets)
 import streamlit as st
 import openai
 import pinecone
+
+st.write("Secrets loaded: ", st.secrets)
 
 # Initialize Pinecone using Streamlit secrets
 pinecone.init(
