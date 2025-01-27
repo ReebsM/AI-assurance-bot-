@@ -32,22 +32,17 @@ if query:
     retrieved_texts = [match['metadata']['text'] for match in results['matches']]
 
     # Generate a response with GPT
-    context = "
+    # Generate a response with GPT
+context = "\n\n".join(retrieved_texts)  # Combine retrieved texts with newlines
+chat_response = openai.ChatCompletion.create(
+    model="gpt-4",
+    messages=[
+        {"role": "system", "content": "You are an AI assistant."},
+        {"role": "user", "content": f"Based on this information:\n\n{context}\n\nAnswer the query: {query}"}
+    ]
+)
 
-".join(retrieved_texts)
-    chat_response = openai.ChatCompletion.create(
-        model="gpt-4",
-        messages=[
-            {"role": "system", "content": "You are an AI assistant."},
-            {"role": "user", "content": f"Based on this information:
+# Display the response
+st.write("### Response:")
+st.write(chat_response["choices"][0]["message"]["content"])
 
-{context}
-
-Answer the query: {query}"}
-        ]
-    )
-
-    # Display the response
-    st.write("### Response:")
-    st.write(chat_response["choices"][0]["message"]["content"])
->
