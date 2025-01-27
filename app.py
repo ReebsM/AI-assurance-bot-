@@ -32,11 +32,11 @@ st.write("Ask me anything based on the uploaded documents!")
 query = st.text_input("Enter your question:")
 if query:
     # Generate embedding for the query
-    query_response = openai.Embedding.create(
-        input=query,
-        model="text-embedding-ada-002"
-    )
-    query_embedding = query_response["data"][0]["embedding"]
+    query_response = openai.Embedding(
+    input=query,
+    model="text-embedding-ada-002"
+)
+query_embedding = query_response["data"][0]["embedding"]
 
     # Query Pinecone
     results = index.query(
