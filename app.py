@@ -2,19 +2,17 @@ import streamlit as st
 import openai
 import pinecone
 
-st.write("Secrets loaded: ", st.secrets)
-
 # Initialize Pinecone using Streamlit secrets
 pinecone.init(
-    api_key=st.secrets["PINECONE_API_KEY"],
-    environment=st.secrets["PINECONE_ENVIRONMENT"]
+    api_key=st.secrets["general"]["PINECONE_API_KEY"],
+    environment=st.secrets["general"]["PINECONE_ENVIRONMENT"]
 )
 
 # Set OpenAI API Key
-openai.api_key = st.secrets["OPENAI_API_KEY"]
+openai.api_key = st.secrets["general"]["OPENAI_API_KEY"]
 
 # Connect to Pinecone index
-index = pinecone.Index("openaiembeddings1")  # Use `pinecone.Index`
+index = pinecone.Index("openaiembeddings1")
 
 # Streamlit app setup
 st.title("AI-Assisted Chatbot")
@@ -39,7 +37,7 @@ if query:
     retrieved_texts = [match['metadata']['text'] for match in results['matches']]
 
     # Generate a response with GPT
-    context = "\n\n".join(retrieved_texts)  # Combine retrieved texts with newlines
+    context = "\n\n".join(retrieved_texts)
     chat_response = openai.ChatCompletion.create(
         model="gpt-4",
         messages=[
