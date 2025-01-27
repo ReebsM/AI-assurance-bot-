@@ -1,20 +1,20 @@
 import streamlit as st
-import openai  # This line and subsequent lines should have no extra indent
+import openai
 import pinecone
-from pinecone import Pinecone, ServerlessSpec 
+from pinecone import Pinecone, ServerlessSpec
 
-   # Initialize Pinecone
-   pc = Pinecone(api_key="YOUR_API_KEY", environment="YOUR_ENVIRONMENT")  
+# Initialize Pinecone
+pc = Pinecone(api_key=st.secrets["general"]["PINECONE_API_KEY"], environment=st.secrets["general"]["PINECONE_ENVIRONMENT"])  
 
-   # Connect to or create an index
-   if "openaiembeddings1" not in pc.list_indexes().names():  # Call names() 
-       pc.create_index(
-           name="openaiembeddings1",
-           dimension=1536,                                       
-        metric="cosine",  # Use "euclidean" if preferred
+# Connect to or create an index
+if "openaiembeddings1" not in pc.list_indexes().names():
+    pc.create_index(
+        name="openaiembeddings1",
+        dimension=1536,
+        metric="cosine",
         spec=ServerlessSpec(
             cloud="aws",
-            region=st.secrets["general"]["PINECONE_ENVIRONMENT"]
+            region=st.secrets["general"]["PINECONE_ENVIRONMENT"]  # Use Streamlit secrets
         )
     )
 
@@ -49,7 +49,7 @@ if query:
     # Generate a response with GPT
     context = "\n\n".join(retrieved_texts)
     chat_response = openai.ChatCompletion.create(
-        model="gpt-4",
+        model="gpt-4",  # or "gpt-3.5-turbo"
         messages=[
             {"role": "system", "content": "You are an AI assistant."},
             {"role": "user", "content": f"Based on this information:\n\n{context}\n\nAnswer the query: {query}"}
