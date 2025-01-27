@@ -7,7 +7,6 @@ from pinecone import Pinecone  # Import the Pinecone class
 # Instead of pinecone.init(), create a Pinecone instance
 pc = Pinecone(api_key="pcsk_3cLjwg_357fBxn8Ya2UpgJnfP7QhGF3yE6EMpMcux9UFNTLEXwYrmppkHJC8otzSdrapXi", environment="us-east1-aws")  
 index = pc.Index("openaiembeddings1")  # Access the index using the Pinecone instance
-openai.api_key = "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" # Set your OpenAI API 
 
 
 # Streamlit app setup
