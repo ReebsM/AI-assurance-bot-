@@ -1,13 +1,13 @@
-<import streamlit as st
+import streamlit as st
 import openai
 import pinecone
-from pinecone import Pinecone  # Import the Pinecone class
 
-# Initialize Pinecone and OpenAI
-# Instead of pinecone.init(), create a Pinecone instance
-pc = Pinecone(api_key="pcsk_3cLjwg_357fBxn8Ya2UpgJnfP7QhGF3yE6EMpMcux9UFNTLEXwYrmppkHJC8otzSdrapXi", environment="us-east1-aws")  
-index = pc.Index("openaiembeddings1")  # Access the index using the Pinecone instance
+# Initialize Pinecone
+pinecone.init(api_key=st.secrets["PINECONE_API_KEY"], environment=st.secrets["PINECONE_ENVIRONMENT"])
+index = pc.Index("openaiembeddings1")
 
+# OpenAI API Key
+openai.api_key = st.secrets["OPENAI_API_KEY"]
 
 # Streamlit app setup
 st.title("AI-Assisted Chatbot")
