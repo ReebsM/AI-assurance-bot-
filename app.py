@@ -1,7 +1,7 @@
 import streamlit as st
-   import openai
-   import pinecone
-   from pinecone import Pinecone  
+import openai  # This line and subsequent lines should have no extra indent
+import pinecone
+from pinecone import Pinecone, ServerlessSpec 
 
    # Initialize Pinecone
    pc = Pinecone(api_key="YOUR_API_KEY", environment="YOUR_ENVIRONMENT")  
