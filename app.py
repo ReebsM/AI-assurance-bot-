@@ -1,13 +1,12 @@
 import streamlit as st
 import openai
-import pinecone
 from pinecone import Pinecone, ServerlessSpec
 
 # Initialize Pinecone
-pc = Pinecone(api_key=st.secrets["general"]["PINECONE_API_KEY"], environment=st.secrets["general"]["PINECONE_ENVIRONMENT"])
+pc = Pinecone(api_key=st.secrets["general"]["PINECONE_API_KEY"])
 
 # Connect to or create an index
-if "openaiembeddings1" not in pc.list_indexes().names():
+if "openaiembeddings1" not in pc.list_indexes().names:
     pc.create_index(
         name="openaiembeddings1",
         dimension=1536,
@@ -32,7 +31,7 @@ st.write("Ask me anything based on the uploaded documents!")
 query = st.text_input("Enter your question:")
 if query:
     # Generate embedding for the query
-    query_response = openai.Embedding.create(  # Corrected indentation
+    query_response = openai.Embedding.create(
         input=query,
         model="text-embedding-ada-002"
     )
@@ -49,7 +48,7 @@ if query:
     # Generate a response with GPT
     context = "\n\n".join(retrieved_texts)
     chat_response = openai.ChatCompletion.create(
-        model="gpt-4",  # or "gpt-3.5-turbo"
+        model="gpt-4",
         messages=[
             {"role": "system", "content": "You are an AI assistant."},
             {"role": "user", "content": f"Based on this information:\n\n{context}\n\nAnswer the query: {query}"}
