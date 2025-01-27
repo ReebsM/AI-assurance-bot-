@@ -2,15 +2,17 @@ import streamlit as st
 import openai
 import pinecone
 
+# Initialize Pinecone using Streamlit secrets
 pinecone.init(
     api_key=st.secrets["PINECONE_API_KEY"],
     environment=st.secrets["PINECONE_ENVIRONMENT"]
 )
 
+# Set OpenAI API Key
 openai.api_key = st.secrets["OPENAI_API_KEY"]
 
-index = pc.Index("openaiembeddings1")
-
+# Connect to Pinecone index
+index = pinecone.Index("openaiembeddings1")  # Use `pinecone.Index`
 
 # Streamlit app setup
 st.title("AI-Assisted Chatbot")
@@ -35,17 +37,15 @@ if query:
     retrieved_texts = [match['metadata']['text'] for match in results['matches']]
 
     # Generate a response with GPT
-    # Generate a response with GPT
-context = "\n\n".join(retrieved_texts)  # Combine retrieved texts with newlines
-chat_response = openai.ChatCompletion.create(
-    model="gpt-4",
-    messages=[
-        {"role": "system", "content": "You are an AI assistant."},
-        {"role": "user", "content": f"Based on this information:\n\n{context}\n\nAnswer the query: {query}"}
-    ]
-)
+    context = "\n\n".join(retrieved_texts)  # Combine retrieved texts with newlines
+    chat_response = openai.ChatCompletion.create(
+        model="gpt-4",
+        messages=[
+            {"role": "system", "content": "You are an AI assistant."},
+            {"role": "user", "content": f"Based on this information:\n\n{context}\n\nAnswer the query: {query}"}
+        ]
+    )
 
-# Display the response
-st.write("### Response:")
-st.write(chat_response["choices"][0]["message"]["content"])
-
+    # Display the response
+    st.write("### Response:")
+    st.write(chat_response["choices"][0]["message"]["content"])
