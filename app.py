@@ -1,18 +1,29 @@
 import streamlit as st
 import openai
-import pinecone
+from pinecone import Pinecone, ServerlessSpec
 
-# Initialize Pinecone using Streamlit secrets
-pinecone.init(
-    api_key=st.secrets["general"]["PINECONE_API_KEY"],
-    environment=st.secrets["general"]["PINECONE_ENVIRONMENT"]
+# Create a Pinecone instance
+pc = Pinecone(
+    api_key=st.secrets["general"]["PINECONE_API_KEY"]
 )
 
-# Set OpenAI API Key
-openai.api_key = st.secrets["general"]["OPENAI_API_KEY"]
+# Connect to or create an index
+if "openaiembeddings1" not in pc.list_indexes().names:
+    pc.create_index(
+        name="openaiembeddings1",
+        dimension=1536,
+        metric="cosine",  # Use "euclidean" if preferred
+        spec=ServerlessSpec(
+            cloud="aws",
+            region=st.secrets["general"]["PINECONE_ENVIRONMENT"]
+        )
+    )
 
-# Connect to Pinecone index
-index = pinecone.Index("openaiembeddings1")
+# Access the index
+index = pc.Index("openaiembeddings1")
+
+# OpenAI API Key
+openai.api_key = st.secrets["general"]["OPENAI_API_KEY"]
 
 # Streamlit app setup
 st.title("AI-Assisted Chatbot")
@@ -34,7 +45,7 @@ if query:
         top_k=5,
         include_metadata=True
     )
-    retrieved_texts = [match['metadata']['text'] for match in results['matches']]
+    retrieved_texts = [match["metadata"]["text"] for match in results["matches"]]
 
     # Generate a response with GPT
     context = "\n\n".join(retrieved_texts)
