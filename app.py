@@ -4,7 +4,7 @@ import pinecone
 from pinecone import Pinecone, ServerlessSpec
 
 # Initialize Pinecone
-pc = Pinecone(api_key=st.secrets["general"]["PINECONE_API_KEY"], environment=st.secrets["general"]["PINECONE_ENVIRONMENT"])  
+pc = Pinecone(api_key=st.secrets["general"]["PINECONE_API_KEY"], environment=st.secrets["general"]["PINECONE_ENVIRONMENT"])
 
 # Connect to or create an index
 if "openaiembeddings1" not in pc.list_indexes().names():
@@ -14,7 +14,7 @@ if "openaiembeddings1" not in pc.list_indexes().names():
         metric="cosine",
         spec=ServerlessSpec(
             cloud="aws",
-            region=st.secrets["general"]["PINECONE_ENVIRONMENT"]  # Use Streamlit secrets
+            region=st.secrets["general"]["PINECONE_ENVIRONMENT"]
         )
     )
 
@@ -32,11 +32,11 @@ st.write("Ask me anything based on the uploaded documents!")
 query = st.text_input("Enter your question:")
 if query:
     # Generate embedding for the query
-    query_response = openai.Embedding(
-    input=query,
-    model="text-embedding-ada-002"
-)
-query_embedding = query_response["data"][0]["embedding"]
+    query_response = openai.Embedding.create(  # Corrected indentation
+        input=query,
+        model="text-embedding-ada-002"
+    )
+    query_embedding = query_response["data"][0]["embedding"]
 
     # Query Pinecone
     results = index.query(
